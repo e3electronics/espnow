@@ -435,6 +435,7 @@ static void mgos_espnow_load_peers_file(){
             free(mac);
         }
     }
+	LOG(LL_INFO, ("test point 3: peers file registered"));
 }
 
 bool mgos_espnow_init(){
@@ -453,6 +454,7 @@ bool mgos_espnow_init(){
     SLIST_INIT(&espnow_send_mac_cb_head);
     esp_now_init();
     if(mgos_sys_config_get_espnow_enable_broadcast()){
+        LOG(LL_INFO, ("test point 4: adding broadcast peer"));
         mgos_espnow_add_broadcast_peer();
     }
     mgos_espnow_load_peers_file();
