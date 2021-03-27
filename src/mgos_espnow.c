@@ -424,6 +424,7 @@ static void mgos_espnow_load_peers_file(){
         name = NULL;
         mac = NULL;
         scanned_softap = 1;
+        LOG(LL_INFO, ("Extracting peer from json file"));	    
         if(json_scanf(item.ptr, item.len, "{ name: %Q, mac: %Q }", &name, &mac) == 2){
             struct mgos_espnow_peer *peer = (struct mgos_espnow_peer*) calloc(1, sizeof(*peer));
             if(mgos_espnow_parse_colon_mac(mac, peer->mac)){
@@ -437,14 +438,16 @@ static void mgos_espnow_load_peers_file(){
                 else peer->channel = channel;
                 SLIST_INSERT_HEAD(&peer_list, peer, next);
                 mgos_espnow_internal_add_peer(peer);
+                LOG(LL_INFO, ("test point 4: peers file registered"));
             } else {
                 LOG(LL_INFO, ("PEER#%d: %s HAS INVALID MAC %s", i, name, mac));
                 free(peer);
             }
             free(mac);
+        }else{
+        LOG(LL_INFO, ("ERROR"));	
         }
     }
-	LOG(LL_INFO, ("test point 4: peers file registered"));
 }
 
 bool mgos_espnow_init(){
