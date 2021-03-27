@@ -346,6 +346,7 @@ static void mgos_espnow_dump_peers_json(){
 }
 
 static esp_err_t mgos_espnow_internal_add_peer(struct mgos_espnow_peer *peer){
+    LOG(LL_INFO, ("test point 9: peer extrated from json file. adding to internal peer"));
     struct esp_now_peer_info newpeer;
     bool modify = false;
     if(esp_now_get_peer(peer->mac, &newpeer) == ESP_OK){
