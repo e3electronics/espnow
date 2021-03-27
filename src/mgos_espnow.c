@@ -44,7 +44,7 @@ int mgos_espnow_total_peers(){
 }
 
 static void mgos_espnow_add_broadcast_peer(){
-    LOG(LL_ERROR, ("Adding broadcast peer to ESPNOW"));
+    LOG(LL_INFO, ("Adding broadcast peer to ESPNOW"));
     struct esp_now_peer_info newpeer = {
         .peer_addr = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff},
         .channel = mgos_sys_config_get_wifi_ap_channel(),
@@ -230,7 +230,7 @@ void espnow_global_tx_cb(const uint8_t *mac_addr, esp_now_send_status_t status){
 mgos_espnow_result_t mgos_espnow_register_recv_mac_cb(const uint8_t *mac, enum mac_cb_type type, espnow_recv_mac_cb_t cb, void *ud){
     struct espnow_recv_mac_cb *cb_entry = (struct espnow_recv_mac_cb *)calloc(1, sizeof(*cb_entry));
     if(cb_entry == NULL){
-        LOG(LL_ERROR, ("Failed to allocate rx cb struct"));
+        LOG(LL_INFO, ("Failed to allocate rx cb struct"));
         return ESPNOW_NO_MEM;
     }
     cb_entry->type = type;
@@ -247,7 +247,7 @@ mgos_espnow_result_t mgos_espnow_register_recv_mac_cb(const uint8_t *mac, enum m
 mgos_espnow_result_t mgos_espnow_register_send_mac_cb(const uint8_t *mac, enum mac_cb_type type, espnow_send_mac_cb_t cb, void *ud){
     struct espnow_send_mac_cb *cb_entry = (struct espnow_send_mac_cb *)calloc(1, sizeof(*cb_entry));
     if(cb_entry == NULL){
-        LOG(LL_ERROR, ("Failed to allocate tx cb struct"));
+        LOG(LL_INFO, ("Failed to allocate tx cb struct"));
         return ESPNOW_NO_MEM;
     }
     cb_entry->type = type;
@@ -264,7 +264,7 @@ mgos_espnow_result_t mgos_espnow_register_send_mac_cb(const uint8_t *mac, enum m
 mgos_espnow_result_t mgos_espnow_register_recv_peer_cb(const char *name, espnow_recv_peer_cb_t cb, void *ud){
     struct espnow_recv_peer_cb *cb_entry = (struct espnow_recv_peer_cb *)calloc(1, sizeof(*cb_entry));
     if(cb_entry == NULL){
-        LOG(LL_ERROR, ("Failed to allocate rx cb struct"));
+        LOG(LL_INFO, ("Failed to allocate rx cb struct"));
         return ESPNOW_NO_MEM;
     }
     struct mgos_espnow_peer *peer = mgos_espnow_get_peer_by_name(name);
@@ -282,7 +282,7 @@ mgos_espnow_result_t mgos_espnow_register_recv_peer_cb(const char *name, espnow_
 mgos_espnow_result_t mgos_espnow_register_send_peer_cb(const char *name, espnow_send_peer_cb_t cb, void *ud){
     struct espnow_send_peer_cb *cb_entry = (struct espnow_send_peer_cb *)calloc(1, sizeof(*cb_entry));
     if(cb_entry == NULL){
-        LOG(LL_ERROR, ("Failed to allocate tx cb struct"));
+        LOG(LL_INFO, ("Failed to allocate tx cb struct"));
         return ESPNOW_NO_MEM;
     }
     struct mgos_espnow_peer *peer = mgos_espnow_get_peer_by_name(name);
@@ -305,7 +305,7 @@ mgos_espnow_result_t mgos_espnow_send(const char *name, const uint8_t *data, int
         if(strcmp(name, peer->name) == 0){
             esp_err_t error = esp_now_send(peer->mac, data, len);
             if(error != ESP_OK){
-                LOG(LL_ERROR, ("ESPNOW ERROR %d: %s", error, esp_err_to_name(error)));
+                LOG(LL_INFO, ("ESPNOW ERROR %d: %s", error, esp_err_to_name(error)));
             }
 	    LOG(LL_INFO, ("test point 6: data was sent"));
             return ESPNOW_OK;
@@ -322,10 +322,10 @@ mgos_espnow_result_t mgos_espnow_broadcast(const uint8_t *data, int len){
 }
 
 static void mgos_espnow_dump_peers_json(){
-    LOG(LL_ERROR, ("Dumping current peer list to file"));
+    LOG(LL_INFO, ("Dumping current peer list to file"));
     FILE *out_json = fopen(mgos_sys_config_get_espnow_peers_filename(), "w");
     if(out_json == NULL){
-        LOG(LL_ERROR, ("Failed to open file %s for writing!", mgos_sys_config_get_espnow_peers_filename()));
+        LOG(LL_INFO, ("Failed to open file %s for writing!", mgos_sys_config_get_espnow_peers_filename()));
         return;
     }
     struct json_out file_output = JSON_OUT_FILE(out_json);
@@ -369,7 +369,7 @@ mgos_espnow_result_t mgos_espnow_add_peer(const char *name, const uint8_t *mac, 
     struct mgos_espnow_peer *peer, *mnewpeer;
     SLIST_FOREACH(peer, &peer_list, next){
         if(strcmp(name, peer->name) == 0 || memcmp(peer->mac, mac, 6) == 0){
-            LOG(LL_ERROR, ("Adding new peer. Removing %s, MAC: %.2x:%.2x:%.2x:%.2x:%.2x:%.2x", peer->name, peer->mac[0], peer->mac[1], peer->mac[2], peer->mac[3], peer->mac[4], peer->mac[5]));
+            LOG(LL_INFO, ("Adding new peer. Removing %s, MAC: %.2x:%.2x:%.2x:%.2x:%.2x:%.2x", peer->name, peer->mac[0], peer->mac[1], peer->mac[2], peer->mac[3], peer->mac[4], peer->mac[5]));
             SLIST_REMOVE(&peer_list, peer, mgos_espnow_peer, next);
             free(peer->name);
             free(peer);
@@ -427,7 +427,7 @@ static void mgos_espnow_load_peers_file(){
         if(json_scanf(item.ptr, item.len, "{ name: %Q, mac: %Q }", &name, &mac) == 2){
             struct mgos_espnow_peer *peer = (struct mgos_espnow_peer*) calloc(1, sizeof(*peer));
             if(mgos_espnow_parse_colon_mac(mac, peer->mac)){
-                LOG(LL_ERROR, ("New Peer Name: %s  MAC: %.2x:%.2x:%.2x:%.2x:%.2x:%.2x", name, peer->mac[0], peer->mac[1], peer->mac[2], peer->mac[3], peer->mac[4], peer->mac[5]));
+                LOG(LL_INFO, ("New Peer Name: %s  MAC: %.2x:%.2x:%.2x:%.2x:%.2x:%.2x", name, peer->mac[0], peer->mac[1], peer->mac[2], peer->mac[3], peer->mac[4], peer->mac[5]));
                 peer->name = name;
                 json_scanf(item.ptr, item.len, "{ softap: %B }", &scanned_softap);
                 peer->softap = (bool)scanned_softap;
@@ -438,7 +438,7 @@ static void mgos_espnow_load_peers_file(){
                 SLIST_INSERT_HEAD(&peer_list, peer, next);
                 mgos_espnow_internal_add_peer(peer);
             } else {
-                LOG(LL_ERROR, ("PEER#%d: %s HAS INVALID MAC %s", i, name, mac));
+                LOG(LL_INFO, ("PEER#%d: %s HAS INVALID MAC %s", i, name, mac));
                 free(peer);
             }
             free(mac);
@@ -453,7 +453,7 @@ bool mgos_espnow_init(){
 	return true;
     }
     if(!mgos_sys_config_get_wifi_sta_enable() && !mgos_sys_config_get_wifi_ap_enable()){
-        LOG(LL_ERROR, ("No wifi interfaces enabled! ESPNOW will not work."));
+        LOG(LL_INFO, ("No wifi interfaces enabled! ESPNOW will not work."));
         return true;
     }
     SLIST_INIT(&peer_list);  
@@ -471,9 +471,9 @@ bool mgos_espnow_init(){
     esp_now_register_send_cb(espnow_global_tx_cb);
     uint8_t mac[6];
     esp_wifi_get_mac(ESP_IF_WIFI_AP, mac);
-    LOG(LL_ERROR, ("AP MAC Address: %.2x:%.2x:%.2x:%.2x:%.2x:%.2x", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]));
+    LOG(LL_INFO, ("AP MAC Address: %.2x:%.2x:%.2x:%.2x:%.2x:%.2x", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]));
     esp_wifi_get_mac(ESP_IF_WIFI_STA, mac);
-    LOG(LL_ERROR, ("STA MAC Address: %.2x:%.2x:%.2x:%.2x:%.2x:%.2x", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]));
+    LOG(LL_INFO, ("STA MAC Address: %.2x:%.2x:%.2x:%.2x:%.2x:%.2x", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]));
     LOG(LL_INFO, ("test point 5: espnow initialized"));
     return true;
 }
