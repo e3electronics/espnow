@@ -420,6 +420,7 @@ static void mgos_espnow_load_peers_file(){
     return;
     }
     peers_json_len = strlen(peers_json);
+    LOG(LL_INFO, ("test point 3: entering for"));
     for(int i = 0; json_scanf_array_elem(peers_json, peers_json_len, "", i, &item) > 0; i++) {
         name = NULL;
         mac = NULL;
