@@ -406,7 +406,10 @@ static void mgos_espnow_load_peers_file(){
     char *name = NULL, *mac = NULL;
     char scanned_softap = 0;
     peers_json = json_fread(mgos_sys_config_get_espnow_peers_filename());
-    if(peers_json == NULL) return;
+    if(peers_json == NULL){ 
+    LOG(LL_INFO, ("test point 2: Peers file no detected"));	    
+    return;
+    }
     peers_json_len = strlen(peers_json);
     for(int i = 0; json_scanf_array_elem(peers_json, peers_json_len, "", i, &item) > 0; i++) {
         name = NULL;
@@ -435,7 +438,10 @@ static void mgos_espnow_load_peers_file(){
 }
 
 bool mgos_espnow_init(){
-    if(!mgos_sys_config_get_espnow_enable()) return true;
+    if(!mgos_sys_config_get_espnow_enable()){
+	LOG(LL_INFO, ("test point 1"));
+	return true;
+    }
     if(!mgos_sys_config_get_wifi_sta_enable() && !mgos_sys_config_get_wifi_ap_enable()){
         LOG(LL_ERROR, ("No wifi interfaces enabled! ESPNOW will not work."));
         return true;
