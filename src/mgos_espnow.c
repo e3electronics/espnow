@@ -181,6 +181,7 @@ static void espnow_global_rx_cb(const uint8_t *mac_addr, const uint8_t *data, in
 }
 
 void espnow_global_tx_cb(const uint8_t *mac_addr, esp_now_send_status_t status){
+    LOG(LL_INFO, ("test point 7: tx callback executed"));
     uint8_t bcast_addr[6] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
     if(mgos_sys_config_get_espnow_debug_level() != -1){
         LOG(mgos_sys_config_get_espnow_debug_level(), 
@@ -202,20 +203,24 @@ void espnow_global_tx_cb(const uint8_t *mac_addr, esp_now_send_status_t status){
         switch(m_cb->type){
             case ALL:
             m_cb->cb(mac_addr, status == ESP_NOW_SEND_SUCCESS, m_cb->ud);
+            LOG(LL_INFO, ("test point 8: espnow send success"));
             break;
             case BCAST:
             if(memcmp(bcast_addr, mac_addr, 6) == 0){
                 m_cb->cb(mac_addr, status == ESP_NOW_SEND_SUCCESS, m_cb->ud);
+		LOG(LL_INFO, ("test point 8: espnow send success"));
             }
             break;
             case ANY_PEER:
             if(send_peer != NULL){
                 m_cb->cb(mac_addr, status == ESP_NOW_SEND_SUCCESS, m_cb->ud);
+		LOG(LL_INFO, ("test point 8: espnow send success"));
             }
             break;
             case MAC:
             if(memcmp(m_cb->mac, mac_addr, 6) == 0){
                 m_cb->cb(mac_addr, status == ESP_NOW_SEND_SUCCESS, m_cb->ud);
+		LOG(LL_INFO, ("test point 8: espnow send success"));
             }
             break;
         }
@@ -293,6 +298,7 @@ mgos_espnow_result_t mgos_espnow_register_send_peer_cb(const char *name, espnow_
 }
 
 mgos_espnow_result_t mgos_espnow_send(const char *name, const uint8_t *data, int len){
+    LOG(LL_INFO, ("test point 5: send command executed"));
     struct mgos_espnow_peer *peer;
     char *error[50];
     SLIST_FOREACH(peer, &peer_list, next){
@@ -301,9 +307,11 @@ mgos_espnow_result_t mgos_espnow_send(const char *name, const uint8_t *data, int
             if(error != ESP_OK){
                 LOG(LL_ERROR, ("ESPNOW ERROR %d: %s", error, esp_err_to_name(error)));
             }
+	    LOG(LL_INFO, ("test point 6: data was sent"));
             return ESPNOW_OK;
         }
     }
+    LOG(LL_INFO, ("test point 7: Peer not found"));
     return ESPNOW_PEER_NOT_FOUND;
 }
 
