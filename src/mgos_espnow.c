@@ -138,7 +138,7 @@ void mgos_espnow_remove_recv_peer_cb(espnow_recv_peer_cb_t cb, const char *name)
 }
 
 static void espnow_global_rx_cb(const uint8_t *mac_addr, const uint8_t *data, int data_len){
-    if(mgos_sys_config_get_espnow_debug_level() != -1){
+    if(mgos_sys_config_get_espnow_debug_level() == 1){
         LOG(mgos_sys_config_get_espnow_debug_level(), 
         ("RX - MAC %.2x:%.2x:%.2x:%.2x:%.2x:%.2x Data len %d - %.*s", 
         mac_addr[0], mac_addr[1], mac_addr[2], mac_addr[3], mac_addr[4], mac_addr[5], 
@@ -183,7 +183,7 @@ static void espnow_global_rx_cb(const uint8_t *mac_addr, const uint8_t *data, in
 void espnow_global_tx_cb(const uint8_t *mac_addr, esp_now_send_status_t status){
     LOG(LL_INFO, ("test point 7: tx callback executed"));
     uint8_t bcast_addr[6] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
-    if(mgos_sys_config_get_espnow_debug_level() != -1){
+    if(mgos_sys_config_get_espnow_debug_level() == 1){
         LOG(mgos_sys_config_get_espnow_debug_level(), 
         ("TX - MAC %.2x:%.2x:%.2x:%.2x:%.2x:%.2x Result: %s", 
         mac_addr[0], mac_addr[1], mac_addr[2], mac_addr[3], mac_addr[4], mac_addr[5], 
