@@ -23,6 +23,8 @@ Peers JSON format
       - ["wifi.ap.ssid", "xxxxxx"]
       - ["wifi.ap.pass", "xxxxxx"]
       - ["wifi.ap.channel", 1]
+      - ["wifi.ap.keep_enabled", true]
+      - ["wifi.ap.hidden", true] 
 
       - ["espnow.enable", true]
       - ["espnow.peers_filename", "espnow_peers.json"]
