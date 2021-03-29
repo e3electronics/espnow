@@ -18,7 +18,6 @@ Peers JSON format
       - ["wifi.sta.enable", true]
       - ["wifi.sta.ssid", "xxxxxx"]
       - ["wifi.sta.pass", "xxxxxx"]
-#Power save mode for station: 0 - none, 1 - min, 2 - max
       - ["wifi.sta_ps_mode", 0]
 
       - ["wifi.ap.ssid", "xxxxxx"]
@@ -32,3 +31,7 @@ Peers JSON format
 
 cdefs:
 MGOS_WIFI_ENABLE_AP_STA: 1
+
+
+
+#Power save mode for station: 0 - none, 1 - min, 2 - max
