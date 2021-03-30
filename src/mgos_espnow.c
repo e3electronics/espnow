@@ -416,11 +416,15 @@ static void mgos_espnow_load_peers_file(){
     char scanned_softap = 0;
     peers_json = json_fread(mgos_sys_config_get_espnow_peers_filename());
     if(peers_json == NULL){ 
-    LOG(LL_INFO, ("test point 3: Peers file no detected"));	    
+       if(mgos_sys_config_get_espnow_debug_level() > 0){    
+          LOG(LL_INFO, ("test point 3: Peers file no detected"));
+       }	    
     return;
     }
     peers_json_len = strlen(peers_json);
-    LOG(LL_INFO, ("test point 3: entering for"));
+    if(mgos_sys_config_get_espnow_debug_level() > 0){
+       LOG(LL_INFO, ("test point 3: entering for"));
+    }
     for(int i = 0; json_scanf_array_elem(peers_json, peers_json_len, "", i, &item) > 0; i++) {
         name = NULL;
         mac = NULL;
@@ -439,7 +443,9 @@ static void mgos_espnow_load_peers_file(){
                 else peer->channel = channel;
                 SLIST_INSERT_HEAD(&peer_list, peer, next);
                 mgos_espnow_internal_add_peer(peer);
-                LOG(LL_INFO, ("test point 4: peers file registered"));
+                if(mgos_sys_config_get_espnow_debug_level() > 0){
+                   LOG(LL_INFO, ("test point 4: peers file registered"));
+                }
             } else {
                 LOG(LL_INFO, ("PEER#%d: %s HAS INVALID MAC %s", i, name, mac));
                 free(peer);
@@ -453,7 +459,9 @@ static void mgos_espnow_load_peers_file(){
 
 bool mgos_espnow_init(){
     if(!mgos_sys_config_get_espnow_enable()){
-	LOG(LL_INFO, ("test point 1"));
+	if(mgos_sys_config_get_espnow_debug_level() > 0){
+            LOG(LL_INFO, ("test point 1"));
+        }
 	return true;
     }
     if(!mgos_sys_config_get_wifi_sta_enable() && !mgos_sys_config_get_wifi_ap_enable()){
@@ -467,8 +475,10 @@ bool mgos_espnow_init(){
     SLIST_INIT(&espnow_send_mac_cb_head);
     esp_now_init();
     if(mgos_sys_config_get_espnow_enable_broadcast()){
-        LOG(LL_INFO, ("test point 2: adding broadcast peer"));
         mgos_espnow_add_broadcast_peer();
+        if(mgos_sys_config_get_espnow_debug_level() > 0){
+            LOG(LL_INFO, ("test point 2: adding broadcast peer"));
+        }
     }
     mgos_espnow_load_peers_file();
     esp_now_register_recv_cb(espnow_global_rx_cb);
@@ -478,6 +488,8 @@ bool mgos_espnow_init(){
     LOG(LL_INFO, ("AP MAC Address: %.2x:%.2x:%.2x:%.2x:%.2x:%.2x", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]));
     esp_wifi_get_mac(ESP_IF_WIFI_STA, mac);
     LOG(LL_INFO, ("STA MAC Address: %.2x:%.2x:%.2x:%.2x:%.2x:%.2x", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]));
-    LOG(LL_INFO, ("test point 5: espnow initialized"));
+    if(mgos_sys_config_get_espnow_debug_level() > 0){
+        LOG(LL_INFO, ("test point 5: espnow initialized"));
+    }
     return true;
 }
