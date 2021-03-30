@@ -431,7 +431,9 @@ static void mgos_espnow_load_peers_file(){
         name = NULL;
         mac = NULL;
         scanned_softap = 1;
-        LOG(LL_INFO, ("Extracting peer from json file"));	    
+        if(mgos_sys_config_get_espnow_debug_level() > 0){
+           LOG(LL_INFO, ("Extracting peer from json file"));	    
+        }
         if(json_scanf(item.ptr, item.len, "{ name: %Q, mac: %Q }", &name, &mac) == 2){
             struct mgos_espnow_peer *peer = (struct mgos_espnow_peer*) calloc(1, sizeof(*peer));
             if(mgos_espnow_parse_colon_mac(mac, peer->mac)){
