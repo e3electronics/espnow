@@ -31,6 +31,16 @@ Peers JSON format
       - ["espnow.enable_broadcast", true]
       - ["espnow.debug_level", 1]
 
+conds:
+  - when: config_schema.espnow.enable_broadcast == "true"
+    apply:
+      config_schema:
+        - ["espnow.enable_encrypt_test", false]
+  - when: config_schema.espnow.enable_broadcast == "false"
+    apply:
+      config_schema:
+        - ["espnow.enable_encrypt_test", true]
+
 cdefs:
 MGOS_WIFI_ENABLE_AP_STA: 1
 
