@@ -1,4 +1,4 @@
-ESPNOW library for Moongoose OS
+ESPNOW library for Moongoose OS - Enhanced (Encrypt Version)
 
 Peers JSON format
 
@@ -12,6 +12,8 @@ Peers JSON format
         }
     ]
 
+
+YML Format
 
     config_schema:
 
