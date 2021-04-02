@@ -361,10 +361,10 @@ static esp_err_t mgos_espnow_internal_add_peer(struct mgos_espnow_peer *peer){
     if(peer->softap) newpeer.ifidx = ESP_IF_WIFI_AP;
     else newpeer.ifidx = ESP_IF_WIFI_STA;
     //if(!mgos_sys_config_get_espnow_enable_broadcast()){
-       newpeer.lmk[16] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F};
+    // newpeer.lmk[16] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F};
     // newpeer.encrypt = true;
     //}else{
-    newpeer.encrypt = true;
+    newpeer.encrypt = false;
     //}
     if(!modify) return esp_now_add_peer(&newpeer);
     else return esp_now_mod_peer(&newpeer);
