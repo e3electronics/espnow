@@ -360,7 +360,7 @@ static esp_err_t mgos_espnow_internal_add_peer(struct mgos_espnow_peer *peer){
     newpeer.channel = peer->channel;
     if(peer->softap) newpeer.ifidx = ESP_IF_WIFI_AP;
     else newpeer.ifidx = ESP_IF_WIFI_STA;
-    if(!mgos_sys_config_get_espnow_enable_broadcast() && mgos_sys_config_get_espnow_encrypt_test()){
+    if(!mgos_sys_config_get_espnow_enable_broadcast()){
        newpeer.lmk = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F};
        newpeer.encrypt = true;
     }else{
@@ -485,13 +485,13 @@ bool mgos_espnow_init(){
     SLIST_INIT(&espnow_send_peer_cb_head);
     SLIST_INIT(&espnow_send_mac_cb_head);
     esp_now_init();
-    if(mgos_sys_config_get_espnow_enable_broadcast() && !mgos_sys_config_get_espnow_encrypt_test()){
+    if(mgos_sys_config_get_espnow_enable_broadcast()){
        mgos_espnow_add_broadcast_peer();
           if(mgos_sys_config_get_espnow_debug_level() > 0){
              LOG(LL_INFO, ("test point 2: adding broadcast peer"));
           }
     }
-    if(!mgos_sys_config_get_espnow_enable_broadcast() && mgos_sys_config_get_espnow_encrypt_test()){
+    if(!mgos_sys_config_get_espnow_enable_broadcast()){
        uint8_t pmk[16] = {0x01,0x02,0x03,0x04,0x01,0x02,0x03,0x04,0x01,0x02,0x03,0x04,0x01,0x02,0x03,0x04};
        esp_now_set_pmk(const uint8_t *pmk);
     }
