@@ -491,10 +491,10 @@ bool mgos_espnow_init(){
              LOG(LL_INFO, ("test point 2: adding broadcast peer"));
           }
     }
-    //if(!mgos_sys_config_get_espnow_enable_broadcast()){
-    //   uint8_t pmk[16] = {0x01,0x02,0x03,0x04,0x01,0x02,0x03,0x04,0x01,0x02,0x03,0x04,0x01,0x02,0x03,0x04};
-    //   esp_now_set_pmk(pmk);
-    //}
+    if(!mgos_sys_config_get_espnow_enable_broadcast()){
+       uint8_t pmk[16] = {0x01,0x02,0x03,0x04,0x01,0x02,0x03,0x04,0x01,0x02,0x03,0x04,0x01,0x02,0x03,0x04};
+       esp_now_set_pmk(pmk);
+    }
     mgos_espnow_load_peers_file();
     esp_now_register_recv_cb(espnow_global_rx_cb);
     esp_now_register_send_cb(espnow_global_tx_cb);
