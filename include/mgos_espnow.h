@@ -53,8 +53,8 @@ struct mgos_espnow_peer {
     bool softap;
     int channel;
     char *name;
-    uint8_t lmk[16]
-    bool encrypt;
+    //uint8_t lmk[16]
+    //bool encrypt;
     
     SLIST_ENTRY(mgos_espnow_peer) next;
 };
